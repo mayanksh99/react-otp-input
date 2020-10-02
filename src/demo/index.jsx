@@ -1,34 +1,29 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { render } from 'react-dom';
 
 import OtpInput from '../../lib';
 import './styles.css';
 
-class Demo extends Component {
-  constructor(props) {
-    super(props);
+const Demo = () => {
+  
+  const [otp,setOtp] = useState("");
+  const [numInputs,setNumInputs] = useState(4);
+  const [separator,setSeperator] = useState('-');
+  const [isDisabled,setIsDisabled] = useState(false);
+  const [hasErrored,setHasErrored] = useState(false);
+  const [isInputNum,setIsInputNum] = useState(false);
+  const [minLength,setMinLength] = useState(0);
+  const [maxLength,setMaxLength] = useState(40);
 
-    this.state = {
-      otp: '',
-      numInputs: 4,
-      separator: '-',
-      isDisabled: false,
-      hasErrored: false,
-      isInputNum: false,
-      minLength: 0,
-      maxLength: 40,
-    };
-  }
 
-  handleOtpChange = otp => {
-    this.setState({ otp });
+  const handleOtpChange = otp => {
+    setOtp(otp);
   };
 
-  handleChange = e => {
+  const handleChange = e => {
     let currVal = e.target.value;
 
     if (e.target.name === 'numInputs') {
-      const { minLength, maxLength } = this.state;
 
       if (currVal < minLength || currVal > maxLength) {
         currVal = 4;
@@ -38,35 +33,25 @@ class Demo extends Component {
         );
       }
     }
-
-    this.setState({ [e.target.name]: currVal });
+    if(e.target.name === "numInputs") setNumInputs(currVal)
+    if(e.target.name === "separator") setSeperator(currVal)
+    if(e.target.name === "otp") setOtp(currVal)
   };
 
-  clearOtp = () => {
-    this.setState({ otp: '' });
+  const clearOtp = () => {
+    setOtp('');
   };
 
-  handleCheck = e => {
-    const { name } = e.target;
-    this.setState(prevState => ({ [name]: !prevState[name] }));
+  const handleCheck = e => {
+    if(e.target.name === "isDisabled") setIsDisabled(!isDisabled)
+    if(e.target.name === "hasErrored") setHasErrored(!hasErrored)
+    if(e.target.name === "isInputNum") setIsInputNum(!isInputNum)
   };
 
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
-    alert(this.state.otp);
+    alert(otp);
   };
-
-  render() {
-    const {
-      otp,
-      numInputs,
-      separator,
-      isDisabled,
-      hasErrored,
-      isInputNum,
-      minLength,
-      maxLength,
-    } = this.state;
 
     return (
       <div className="container">
@@ -87,7 +72,7 @@ class Demo extends Component {
                 name="numInputs"
                 type="number"
                 value={numInputs}
-                onChange={this.handleChange}
+                onChange={handleChange}
                 min={minLength}
                 max={maxLength}
               />
@@ -102,7 +87,7 @@ class Demo extends Component {
                 name="separator"
                 type="text"
                 value={separator}
-                onChange={this.handleChange}
+                onChange={handleChange}
               />
             </label>
           </div>
@@ -115,7 +100,7 @@ class Demo extends Component {
                 name="otp"
                 type="text"
                 value={otp}
-                onChange={this.handleChange}
+                onChange={handleChange}
               />
             </label>
           </div>
@@ -126,7 +111,7 @@ class Demo extends Component {
                 name="isDisabled"
                 type="checkbox"
                 checked={isDisabled}
-                onChange={this.handleCheck}
+                onChange={handleCheck}
               />
               isDisabled
             </label>
@@ -138,7 +123,7 @@ class Demo extends Component {
                 name="hasErrored"
                 type="checkbox"
                 checked={hasErrored}
-                onChange={this.handleCheck}
+                onChange={handleCheck}
               />
               hasErrored
             </label>
@@ -150,7 +135,7 @@ class Demo extends Component {
                 name="isInputNum"
                 type="checkbox"
                 checked={isInputNum}
-                onChange={this.handleCheck}
+                onChange={handleCheck}
               />
               isInputNum
             </label>
@@ -163,7 +148,7 @@ class Demo extends Component {
         </div>
         <div className="view">
           <div className="card">
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={handleSubmit}>
               <p>Enter verification code</p>
               <div className="margin-top--small">
                 <OtpInput
@@ -172,7 +157,7 @@ class Demo extends Component {
                   isDisabled={isDisabled}
                   hasErrored={hasErrored}
                   errorStyle="error"
-                  onChange={this.handleOtpChange}
+                  onChange={handleOtpChange}
                   separator={<span>{separator}</span>}
                   isInputNum={isInputNum}
                   shouldAutoFocus
@@ -184,7 +169,7 @@ class Demo extends Component {
                   className="btn margin-top--large"
                   type="button"
                   disabled={isDisabled}
-                  onClick={this.clearOtp}
+                  onClick={clearOtp}
                 >
                   Clear
                 </button>
@@ -200,7 +185,6 @@ class Demo extends Component {
         </div>
       </div>
     );
-  }
 }
 
 render(<Demo />, document.getElementById('app'));
